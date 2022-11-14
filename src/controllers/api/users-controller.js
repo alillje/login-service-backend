@@ -72,42 +72,34 @@ export class UsersController {
     // Pagination
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
-    const startIndex = page ? (page - 1) * limit : 1
+    const startIndex = page ? (page - 1) * limit : 0
     const endIndex = page * limit
     const results = {}
-    const regex = new RegExp(req.query.search, 'gi')
 
     try {
       // Check length of all users
 
-      const allUsers = await User.find(query)
-      console.log(req.query.search)
       if (req.query.search) {
-        results.users = await User.find({
-          username: {
-            $regex: new RegExp(req.query.search, 'im')
-          }
-        }).limit(limit).skip(startIndex).sort({ username: 1 })
-      } else {
-        results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
+        query.username = {
+          $regex: new RegExp(req.query.search, 'i')
+        }
       }
+      const allUsers = await User.find(query)
+      results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
       // Pagination
-      if (page) {
-        if (endIndex < allUsers.length) {
-          results.next = {
-            page,
-            limit
-          }
+      if (endIndex < allUsers.length) {
+        results.next = {
+          page,
+          limit
         }
-        if (startIndex < 0) {
-          results.previous = {
-            page,
-            limit
-          }
-        }
-
-        results.pages = Math.ceil(allUsers.length / limit) || 1
       }
+      if (startIndex < 0) {
+        results.previous = {
+          page,
+          limit
+        }
+      }
+      results.pages = Math.ceil(allUsers.length / limit)
       res.json(results)
     } catch (error) {
       console.error(error)
