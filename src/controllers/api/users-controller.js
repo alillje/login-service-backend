@@ -69,7 +69,6 @@ export class UsersController {
    */
   async getAll (req, res, next) {
     const query = {}
-    query.admin = false
     // Pagination
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
@@ -105,82 +104,40 @@ export class UsersController {
     }
   }
 
-  /**
-   * Registers a user.
-   *
-   * @param {object} req - Express request object.
-   * @param {object} res - Express response object.
-   * @param {Function} next - Express next middleware function.
-   */
-  async register (req, res, next) {
-    try {
-      // Check all required fields exist before making request to DB.
-      if (!req.body.company || !req.body.password || !req.body.email || !req.body.orgNo) {
-        const error = new Error('Validation error')
-        error.name = 'ValidationError'
-        throw error
-      }
-      // Make username credentials case insensitive
-      const user = new User({
-        username: req.body.username,
-        password: req.body.password
-      })
+  // /**
+  //  * Registers a user.
+  //  *
+  //  * @param {object} req - Express request object.
+  //  * @param {object} res - Express response object.
+  //  * @param {Function} next - Express next middleware function.
+  //  */
+  // async updatePassword (req, res, next) {
+  //   try {
+  //     if (!req.body.customer || !req.body.newPassword || !req.body.newPasswordConfirm) {
+  //       const error = createError(400)
+  //       next(error)
+  //     } else if (req.body.newPassword !== req.body.newPasswordConfirm) {
+  //       const error = createError(400)
+  //       next(error)
+  //     }
 
-      await user.save()
+  //     const customer = await User.findById(req.body.customer)
+  //     if (!customer) {
+  //       const error = createError(404)
+  //       next(error)
+  //     }
 
-      res.status(201).json({ id: user.id })
-    } catch (err) {
-      console.log(err)
-      let error = err
+  //     customer.password = req.body.newPassword
+  //     customer.save()
 
-      if (error.code === 11000) {
-        // Duplicated keys.
-        error = createError(409)
-        error.cause = err
-      } else if (error.name === 'ValidationError') {
-        // Validation error(s).
-        error = createError(400)
-        error.cause = err
-      }
-
-      next(error)
-    }
-  }
-
-  /**
-   * Registers a user.
-   *
-   * @param {object} req - Express request object.
-   * @param {object} res - Express response object.
-   * @param {Function} next - Express next middleware function.
-   */
-  async resetPassword (req, res, next) {
-    try {
-      if (!req.body.customer || !req.body.newPassword || !req.body.newPasswordConfirm) {
-        const error = createError(400)
-        next(error)
-      } else if (req.body.newPassword !== req.body.newPasswordConfirm) {
-        const error = createError(400)
-        next(error)
-      }
-
-      const customer = await User.findById(req.body.customer)
-      if (!customer) {
-        const error = createError(404)
-        next(error)
-      }
-
-      customer.password = req.body.newPassword
-      customer.save()
-
-      res
-        .status(204)
-        .end()
-    } catch (err) {
-      console.log(err)
-      let error = err
-      error = createError(400)
-      next(error)
-    }
-  }
+  //     res
+  //       .status(204)
+  //       .end()
+  //   } catch (err) {
+  //     console.log(err)
+  //     let error = err
+  //     error = createError(400)
+  //     next(error)
+  //   }
+  // }
 }

@@ -30,10 +30,11 @@ const authenticateJWT = (req, res, next) => {
     }
 
     // Set properties to req.user from JWT payload
-    const payload = jwt.verify(token, Buffer.from(process.env.ACCESS_TOKEN_PUB, 'base64').toString('ascii'))
-    req.admin = {
+    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_PUBLIC_KEY)
+
+    req.user = {
       sub: payload.sub,
-      admin: payload.admin
+      username: payload.username
     }
 
     next()
@@ -44,28 +45,6 @@ const authenticateJWT = (req, res, next) => {
   }
 }
 
-// /**
-//  * Authorizes admin users.
-//  *
-//  * Checks if user is admin and has right/access to access users.
-//  *
-//  * @param {object} req - Express request object.
-//  * @param {object} res - Express response object.
-//  * @param {Function} next - Express next middleware function.
-//  */
-// const authorizeAdmin = (req, res, next) => {
-//   try {
-//     if (!req.admin.admin) {
-//       throw new Error('No right to access.')
-//     }
-
-//     next()
-//   } catch (err) {
-//     const error = createError(403)
-//     error.cause = err
-//     next(error)
-//   }
-// }
 export const router = express.Router()
 
 const controller = new UsersController()
@@ -75,9 +54,7 @@ router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, i
 
 router.get('/', authenticateJWT, (req, res, next) => controller.getAll(req, res, next))
 
-router.post('/register', authenticateJWT, (req, res, next) => controller.register(req, res, next))
-
-router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.resetPassword(req, res, next))
+// router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
 
 // GET users/:id
 router.get('/:id',

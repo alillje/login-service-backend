@@ -8,7 +8,6 @@
 import express from 'express'
 import helmet from 'helmet'
 import logger from 'morgan'
-import cors from 'cors'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
 
@@ -16,12 +15,6 @@ try {
   await connectDB()
 
   const app = express()
-
-  app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-    optionSuccessStatus: 200
-  }))
 
   // Set various HTTP headers to make the application little more secure (https://www.npmjs.com/package/helmet).
   app.use(helmet())

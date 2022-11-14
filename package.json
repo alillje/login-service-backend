@@ -20,11 +20,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.2",
     "morgan": "^1.10.0",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "@lnu/eslint-config": "^1.1.7",
-    "dotenv": "^16.0.3",
     "eslint": "^8.27.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",

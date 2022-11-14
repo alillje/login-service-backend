@@ -73,11 +73,17 @@ const authorizeUser = (req, res, next) => {
 // Provide req.user to the route if :id is present in the route path.
 router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, id))
 
+// Register
+router.post('/register', (req, res, next) => controller.register(req, res, next))
+
 // Log in
 router.post('/login', (req, res, next) => controller.login(req, res, next))
 
 // Log out
 router.post('/logout', (req, res, next) => controller.logout(req, res, next))
+
+// Update password
+router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
 
 // GET user/:id
 router.get('/user/:id',
