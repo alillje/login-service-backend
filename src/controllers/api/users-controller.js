@@ -72,7 +72,7 @@ export class UsersController {
     // Pagination
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
-    const startIndex = (page - 1) * limit
+    const startIndex = page ? (page - 1) * limit : 1
     const endIndex = page * limit
     const results = {}
 
@@ -80,64 +80,28 @@ export class UsersController {
       // Check length of all users
       const allUsers = await User.find(query)
 
-      results.users = await User.find(query).limit(limit).skip(startIndex).sort({ company: 1 })
+      results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
       // Pagination
-      if (endIndex < allUsers.length) {
-        results.next = {
-          page: page + 1,
-          limit
+      if (page) {
+        if (endIndex < allUsers.length) {
+          results.next = {
+            page,
+            limit
+          }
         }
-      }
-      if (startIndex < 0) {
-        results.previous = {
-          page: page - 1,
-          limit
+        if (startIndex < 0) {
+          results.previous = {
+            page,
+            limit
+          }
         }
+
+        results.pages = Math.ceil(allUsers.length / limit) || 1
       }
-
-      results.pages = Math.ceil(allUsers.length / limit)
-
       res.json(results)
     } catch (error) {
       console.error(error)
       next(error)
     }
   }
-
-  // /**
-  //  * Registers a user.
-  //  *
-  //  * @param {object} req - Express request object.
-  //  * @param {object} res - Express response object.
-  //  * @param {Function} next - Express next middleware function.
-  //  */
-  // async updatePassword (req, res, next) {
-  //   try {
-  //     if (!req.body.customer || !req.body.newPassword || !req.body.newPasswordConfirm) {
-  //       const error = createError(400)
-  //       next(error)
-  //     } else if (req.body.newPassword !== req.body.newPasswordConfirm) {
-  //       const error = createError(400)
-  //       next(error)
-  //     }
-
-  //     const customer = await User.findById(req.body.customer)
-  //     if (!customer) {
-  //       const error = createError(404)
-  //       next(error)
-  //     }
-
-  //     customer.password = req.body.newPassword
-  //     customer.save()
-
-  //     res
-  //       .status(204)
-  //       .end()
-  //   } catch (err) {
-  //     console.log(err)
-  //     let error = err
-  //     error = createError(400)
-  //     next(error)
-  //   }
-  // }
 }

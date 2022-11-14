@@ -56,30 +56,6 @@ export class AccountController {
   }
 
   /**
-   * Logs user out by revoking refresh token.
-   *
-   * @param {object} req - Express request object.
-   * @param {object} res - Express response object..
-   * @param {Function} next - Express next middleware function.
-   */
-  async logout (req, res, next) {
-    try {
-      if (!req.body.refreshToken) {
-        const error = createError(400)
-        next(error)
-        return
-      }
-      res
-        .status(204)
-        .end()
-    } catch (err) {
-      const error = createError(400)
-      error.cause = err
-      next(error)
-    }
-  }
-
-  /**
    * Provide req.user to the route if :id is present.
    *
    * @param {object} req - Express request object.
@@ -123,7 +99,7 @@ export class AccountController {
    * @param {Function} next - Express next middleware function.
    */
   async find (req, res, next) {
-    res.json(req.customer)
+    res.json(req.user)
   }
 
   /**
