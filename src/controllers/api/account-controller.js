@@ -34,7 +34,6 @@ export class AccountController {
         username: user.username
       }
       // Create the access token.
-      console.log(process.env.ACCESS_TOKEN_SECRET)
       const accessToken = jwt.sign(
         payload,
         process.env.ACCESS_TOKEN_SECRET,
@@ -145,7 +144,7 @@ export class AccountController {
       }
 
       const user = await User.authenticate(
-        req.body.user.toLowerCase(),
+        req.body.username.toLowerCase(),
         req.body.password
       )
 
