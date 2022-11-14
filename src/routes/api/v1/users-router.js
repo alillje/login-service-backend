@@ -55,6 +55,10 @@ router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, i
 router.get('/', authenticateJWT, (req, res, next) => controller.getAll(req, res, next))
 
 // router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
+// GET users/:id
+router.get('/search',
+  authenticateJWT,
+  (req, res, next) => controller.search(req, res, next))
 
 // GET users/:id
 router.get('/:id',

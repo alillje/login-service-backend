@@ -75,12 +75,22 @@ export class UsersController {
     const startIndex = page ? (page - 1) * limit : 1
     const endIndex = page * limit
     const results = {}
+    const regex = new RegExp(req.query.search, 'gi')
 
     try {
       // Check length of all users
-      const allUsers = await User.find(query)
 
-      results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
+      const allUsers = await User.find(query)
+      console.log(req.query.search)
+      if (req.query.search) {
+        results.users = await User.find({
+          username: {
+            $regex: new RegExp(req.query.search, 'im')
+          }
+        }).limit(limit).skip(startIndex).sort({ username: 1 })
+      } else {
+        results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
+      }
       // Pagination
       if (page) {
         if (endIndex < allUsers.length) {
@@ -99,6 +109,28 @@ export class UsersController {
         results.pages = Math.ceil(allUsers.length / limit) || 1
       }
       res.json(results)
+    } catch (error) {
+      console.error(error)
+      next(error)
+    }
+  }
+
+  /**
+   * Search for users.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async search (req, res, next) {
+    try {
+      const results = {}
+      if (req.query.search) {
+        results.users = await User.find({ username: req.query.search.username })
+      }
+      res.json(results)
+
+    // Pagination
     } catch (error) {
       console.error(error)
       next(error)
