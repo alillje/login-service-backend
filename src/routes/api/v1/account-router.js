@@ -83,6 +83,9 @@ router.post('/login', (req, res, next) => controller.login(req, res, next))
 // Log out
 router.post('/logout', (req, res, next) => controller.logout(req, res, next))
 
+// Restore password
+router.post('/password/restore', (req, res, next) => controller.restorePassword(req, res, next))
+
 // Update password
 router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
 

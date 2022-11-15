@@ -8,6 +8,7 @@
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { User } from '../../models/user.js'
+import { transporter } from '../../utils/mail-service.js'
 
 /**
  * Encapsulates a controller.
@@ -170,6 +171,36 @@ export class AccountController {
         error = createError(400)
         error.cause = err
       }
+      next(error)
+    }
+  }
+
+  /**
+   * Restores a user password, by sending a restore email to user email.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async restorePassword (req, res, next) {
+    try {
+      if (!req.body.email) {
+        const error = createError(400)
+        next(error)
+      }
+
+      const info = await transporter.sendMail({
+        from: `"Login Service" <${process.env.EMAIL_USER}>`, // sender address
+        to: req.body.email, // list of receivers
+        subject: 'Restore Password', // Subject line
+        text: 'Hello world?', // plain text body
+        html: '<b>Hello world?</b>' // html body
+      })
+      console.log(info.messageId)
+
+      res.status(204).end()
+    } catch (err) {
+      const error = err
       next(error)
     }
   }
