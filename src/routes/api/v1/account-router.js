@@ -32,7 +32,6 @@ const authenticateJWT = (req, res, next) => {
     if (authenticationScheme !== 'Bearer') {
       throw new Error('Invalid authentication scheme.')
     }
-
     // Set properties to req.user from JWT payload
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_PUBLIC_KEY)
     req.user = {
@@ -71,6 +70,35 @@ const authorizeUser = (req, res, next) => {
   }
 }
 
+/**
+ * Authenticates reset of passwords.
+ *
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
+const authenticatePasswordResetJWT = (req, res, next) => {
+  try {
+    const [authenticationScheme, token] = req.headers.authorization?.split(' ')
+
+    if (authenticationScheme !== 'Bearer') {
+      throw new Error('Invalid authentication scheme.')
+    }
+
+    // Set properties to req.user from JWT payload
+    const payload = jwt.verify(token, process.env.PASSWORD_RESET_PUBLIC)
+    req.user = {
+      sub: payload.sub
+    }
+    next()
+  } catch (err) {
+    const error = createError(401)
+    err.message = 'Invalid access token'
+    error.cause = err
+    next(error)
+  }
+}
+
 // Provide req.user to the route if :id is present in the route path.
 router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, id))
 
@@ -83,11 +111,14 @@ router.post('/login', (req, res, next) => controller.login(req, res, next))
 // Log out
 router.post('/logout', (req, res, next) => controller.logout(req, res, next))
 
-// Restore password
-router.post('/password/restore', (req, res, next) => controller.restorePassword(req, res, next))
-
 // Update password
-router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
+router.patch('/password/update', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
+
+// Restore password
+router.post('/password/restore', (req, res, next) => controller.sendRestoreEmail(req, res, next))
+
+// Reset password
+router.patch('/password/reset', authenticatePasswordResetJWT, (req, res, next) => controller.resetPassword(req, res, next))
 
 // GET user/:id
 router.get('/user/:id',
@@ -100,9 +131,3 @@ router.patch('/password/:id',
   authenticateJWT, authorizeUser,
   (req, res, next) => controller.updatePassword(req, res, next)
 )
-
-// PATCH /:id
-// router.patch('/:id',
-//   authenticateJWT, authorizeUser,
-//   (req, res, next) => controller.updateCredentials(req, res, next)
-// )

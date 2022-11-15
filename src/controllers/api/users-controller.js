@@ -29,15 +29,11 @@ export class UsersController {
         next(error)
         return
       }
-
       // Provide the user to the request object.
       req.user = user
-
-      // Next middleware.
       next()
     } catch (err) {
       let error = err
-      // If id is incorrect, does not match mongoose format (CastError), send 404
       if (error.name === 'CastError') {
         error = createError(404)
         next(error)
