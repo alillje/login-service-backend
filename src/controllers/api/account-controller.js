@@ -2,10 +2,9 @@
  * Module for the AccountController.
  *
  * @author Andreas Lillje
- * @version 2.3.1
+ * @version 1.0.0
  */
 
-// import createError from 'http-errors'
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { User } from '../../models/user.js'
@@ -23,7 +22,6 @@ export class AccountController {
    */
   async login (req, res, next) {
     try {
-      // Make username case insensitive when login
       const user = await User.authenticate(
         req.body.username.toLowerCase(),
         req.body.password
@@ -33,7 +31,7 @@ export class AccountController {
         sub: user.id,
         username: user.username
       }
-      // Create the access token.
+      // Create access token.
       const accessToken = jwt.sign(
         payload,
         process.env.ACCESS_TOKEN_SECRET,
@@ -48,7 +46,6 @@ export class AccountController {
         access_token: accessToken
       })
     } catch (err) {
-      // Authentication failed.
       const error = createError(401)
       error.cause = err
       next(error)
@@ -65,10 +62,8 @@ export class AccountController {
    */
   async loadUser (req, res, next, id) {
     try {
-      // Get the user.
       const user = await User.findById(id)
 
-      // If no image found send 404, set error message.
       if (!user) {
         const error = createError(404)
         next(error)
@@ -81,7 +76,6 @@ export class AccountController {
       next()
     } catch (err) {
       let error = err
-      // If id is incorrect, does not match mongoose format (CastError), send 404
       if (error.name === 'CastError') {
         error = createError(404)
         next(error)
@@ -148,7 +142,7 @@ export class AccountController {
   async register (req, res, next) {
     try {
       // Check all required fields exist before making request to DB.
-      if (!req.body.username || !req.body.password) {
+      if (!req.body.username || !req.body.email || !req.body.password) {
         const error = new Error('Validation error')
         error.name = 'ValidationError'
         throw error
@@ -156,6 +150,7 @@ export class AccountController {
       // Make username credentials case insensitive
       const user = new User({
         username: req.body.username,
+        email: req.body.email,
         password: req.body.password
       })
 
@@ -175,7 +170,6 @@ export class AccountController {
         error = createError(400)
         error.cause = err
       }
-
       next(error)
     }
   }

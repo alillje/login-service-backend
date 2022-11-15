@@ -7,6 +7,9 @@
 
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
+import validator from 'validator'
+
+const { isEmail } = validator
 
 // Create a schema.
 const schema = new mongoose.Schema({
@@ -14,6 +17,14 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, 'Username is required.'],
     unique: true
+  },
+  email: {
+    type: String,
+    required: [true, 'Email address is required.'],
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: [isEmail, 'Please provide a valid email address.']
   },
   password: {
     type: String,

@@ -2,7 +2,7 @@
  * Module for the UsersController.
  *
  * @author Andreas Lillje
- * @version 2.3.1
+ * @version 1.0.0
  */
 
 import createError from 'http-errors'
@@ -22,10 +22,8 @@ export class UsersController {
    */
   async loadUser (req, res, next, id) {
     try {
-      // Get the image.
       const user = await User.findById(id)
 
-      // If no user found send 404, set error message.
       if (!user) {
         const error = createError(404)
         next(error)
@@ -78,7 +76,6 @@ export class UsersController {
 
     try {
       // Check length of all users
-
       if (req.query.search) {
         query.username = {
           $regex: new RegExp(req.query.search, 'i')
@@ -99,6 +96,7 @@ export class UsersController {
           limit
         }
       }
+
       results.pages = Math.ceil(allUsers.length / limit)
       res.json(results)
     } catch (error) {
