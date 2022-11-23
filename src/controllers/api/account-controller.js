@@ -82,6 +82,17 @@ export class AccountController {
         }
       )
 
+      // const accessToken = jwt.sign(
+      //   payload,
+      //   Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'base64').toString(
+      //     'ascii'
+      //   ),
+      //   {
+      //     algorithm: 'RS256',
+      //     expiresIn: process.env.ACCESS_TOKEN_LIFE
+      //   }
+      // )
+
       res.status(200).json({
         access_token: accessToken
       })

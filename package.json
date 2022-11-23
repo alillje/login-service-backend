@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node src/server.js -openssl-legacy-provider",
     "dev": "nodemon --inspect -r dotenv/config src/server.js",
     "lint": "npx eslint ./src || exit 0",
     "lint:fix": "npx eslint ./src --fix || exit 0"
