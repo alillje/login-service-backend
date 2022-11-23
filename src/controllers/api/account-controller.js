@@ -7,9 +7,10 @@
 
 import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
+import validator from 'validator'
 import { User } from '../../models/user.js'
 import { transporter } from '../../utils/mail-service.js'
-import { isValidInput } from '../../utils/validation-service.js'
+import { isValidUsername, isValidPassword } from '../../utils/validation-service.js'
 
 /**
  * Encapsulates a controller.
@@ -28,9 +29,17 @@ export class AccountController {
         const error = createError(400)
         error.message = 'One or more required fields are missing.'
         next(error)
-      } else if (!isValidInput(req.body.username)) {
+      } else if (!isValidUsername(req.body.username)) {
         const error = createError(400)
         error.message = 'The username contains chracters that are not allowed'
+        next(error)
+      } else if (!validator.isEmail(req.body.email)) {
+        const error = createError(400)
+        error.message = 'Invalid email address provided'
+        next(error)
+      } else if (!isValidPassword(req.body.password)) {
+        const error = createError(400)
+        error.message = 'The password must have a length between 10 - 256 characters'
         next(error)
       }
       const user = new User({

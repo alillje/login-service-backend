@@ -12,7 +12,7 @@
  * @param {string} input - The string to validate
  * @returns {boolean} - True if input is valid, false otherwise.
  */
-export const isValidInput = (input) => {
+export const isValidUsername = (input) => {
   const forbiddenChars = ['<', '>', '/']
   for (const char of forbiddenChars) {
     if (input.includes(char)) {
@@ -20,4 +20,14 @@ export const isValidInput = (input) => {
     }
   }
   return true
+}
+
+/**
+ * Validates if a password is of correct length.
+ *
+ * @param {string} password - The password to validate
+ * @returns {boolean} - True if input is valid, false otherwise.
+ */
+export const isValidPassword = (password) => {
+  return password.length >= 10 && password.length < 256
 }
