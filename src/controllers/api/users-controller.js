@@ -56,6 +56,7 @@ export class UsersController {
 
   /**
    * Gets all users.
+   * Find and paginate results based on query parameters.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -66,7 +67,7 @@ export class UsersController {
     // Pagination
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
-    const startIndex = page ? (page - 1) * limit : 0
+    const startIndex = (page - 1) * limit
     const endIndex = page * limit
     const results = {}
 
@@ -80,20 +81,22 @@ export class UsersController {
       const allUsers = await User.find(query)
       results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
       // Pagination
-      if (endIndex < allUsers.length) {
+      if (endIndex < page) {
         results.next = {
           page,
           limit
         }
       }
-      if (startIndex < 0) {
+      if (page > 1) {
         results.previous = {
           page,
           limit
         }
       }
 
-      results.pages = Math.ceil(allUsers.length / limit)
+      if (req.query.page) {
+        results.pages = Math.ceil(allUsers.length / limit) || 1
+      }
       res.json(results)
     } catch (error) {
       console.error(error)
