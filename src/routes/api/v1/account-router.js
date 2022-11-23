@@ -32,12 +32,13 @@ const authenticateJWT = (req, res, next) => {
     if (authenticationScheme !== 'Bearer') {
       throw new Error('Invalid authentication scheme.')
     }
-    // Set properties to req.user from JWT payload
-    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_PUBLIC_KEY)
+
+    const payload = jwt.verify(token, Buffer.from(process.env.ACCESS_TOKEN_PUBLIC_KEY, 'base64').toString('ascii'))
     req.user = {
       sub: payload.sub,
       user: payload.user
     }
+
     next()
   } catch (err) {
     const error = createError(401)
@@ -86,7 +87,7 @@ const authenticatePasswordResetJWT = (req, res, next) => {
     }
 
     // Set properties to req.user from JWT payload
-    const payload = jwt.verify(token, process.env.PASSWORD_RESET_PUBLIC)
+    const payload = jwt.verify(token, Buffer.from(process.env.process.env.PASSWORD_RESET_PUBLIC, 'base64').toString('ascii'))
     req.user = {
       sub: payload.sub
     }

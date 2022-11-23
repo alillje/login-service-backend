@@ -72,26 +72,26 @@ export class AccountController {
       const payload = {
         sub: user.id
       }
-      const accessToken = jwt.sign(
-        payload,
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-          algorithm: 'RS256',
-          expiresIn: process.env.ACCESS_TOKEN_LIFE
-
-        }
-      )
-
       // const accessToken = jwt.sign(
       //   payload,
-      //   Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'base64').toString(
-      //     'ascii'
-      //   ),
+      //   process.env.ACCESS_TOKEN_SECRET,
       //   {
       //     algorithm: 'RS256',
       //     expiresIn: process.env.ACCESS_TOKEN_LIFE
+
       //   }
       // )
+
+      const accessToken = jwt.sign(
+        payload,
+        Buffer.from(process.env.ACCESS_TOKEN_SECRET, 'base64').toString(
+          'ascii'
+        ),
+        {
+          algorithm: 'RS256',
+          expiresIn: process.env.ACCESS_TOKEN_LIFE
+        }
+      )
 
       res.status(200).json({
         access_token: accessToken
@@ -164,10 +164,11 @@ export class AccountController {
         sub: user.id
       }
 
-      // Create access token.
       const restorePasswordToken = jwt.sign(
         payload,
-        process.env.PASSWORD_RESET_PRIVATE,
+        Buffer.from(process.env.PASSWORD_RESET_PRIVATE, 'base64').toString(
+          'ascii'
+        ),
         {
           algorithm: 'RS256',
           expiresIn: process.env.PASSWORD_RESET_TOKEN_LIFE

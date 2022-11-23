@@ -30,7 +30,7 @@ const authenticateJWT = (req, res, next) => {
     }
 
     // Set properties to req.user from JWT payload
-    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_PUBLIC_KEY)
+    const payload = jwt.verify(token, Buffer.from(process.env.ACCESS_TOKEN_PUBLIC_KEY, 'base64').toString('ascii'))
 
     req.user = {
       sub: payload.sub,
