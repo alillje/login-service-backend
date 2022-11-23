@@ -1,10 +1,10 @@
-## Login Service API
+# Login Service API
 
 This is a login service that provides the opportunity for users to register, login, search for other users and delete their profile.
 <br>
 Users can also restore and reset their password.
 
-### Documentation
+## Documentation
 The documenation for the API can be found here: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0
 
 ## Authentication & Authorization
@@ -24,3 +24,16 @@ Please ensure to check trash email.
 Use this token to reset your password by sending request to `/password/reset` accoring to the documentation.
 <br>
 <b>The token to reset your password will be valid for 5 minutes.</b>
+
+## End points
+End points are defined in the <a href="https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0">documentaion</a>.
+<br>
+Here's a plain list of the different endpoints and request types:
+<br>
+
+- POST `/register`
+- POST `/login`
+- POST `/password/restore`
+- PATCH `/password/reset`
+- GET `/users`
+- DELETE `/users/:id`
