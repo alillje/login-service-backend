@@ -65,6 +65,10 @@ export class AccountController {
    */
   async login (req, res, next) {
     try {
+      if (!req.body.username || !req.body.password) {
+        const error = createError(400)
+        next(error)
+      }
       const user = await User.authenticate(
         req.body.username.toLowerCase(),
         req.body.password
@@ -72,15 +76,6 @@ export class AccountController {
       const payload = {
         sub: user.id
       }
-      // const accessToken = jwt.sign(
-      //   payload,
-      //   process.env.ACCESS_TOKEN_SECRET,
-      //   {
-      //     algorithm: 'RS256',
-      //     expiresIn: process.env.ACCESS_TOKEN_LIFE
-
-      //   }
-      // )
 
       const accessToken = jwt.sign(
         payload,
@@ -97,7 +92,7 @@ export class AccountController {
         access_token: accessToken
       })
     } catch (err) {
-      console.log(err)
+      console.log(err.name)
       const error = createError(401)
       error.cause = err
       next(error)

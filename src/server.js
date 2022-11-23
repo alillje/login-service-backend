@@ -35,7 +35,7 @@ try {
     if (err.status === 500) {
       err.message = 'An unexpected condition was encountered.'
     } else if (err.status === 400) {
-      err.message = 'The request cannot or will not be processed due to something that is perceived to be a client error (for example validation error).'
+      err.message = 'One or more required fields are missing.'
     } else if (err.status === 409) {
       err.message = 'The username and/or email address is already registered.'
     }
