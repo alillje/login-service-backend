@@ -57,6 +57,7 @@ export class AccountController {
 
   /**
    * Authenticates a user.
+   * Sets user-id to subject in JWT payload & creates an access token.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
@@ -68,11 +69,9 @@ export class AccountController {
         req.body.username.toLowerCase(),
         req.body.password
       )
-      // Set user-id to sub (subject) in JWT payload
       const payload = {
         sub: user.id
       }
-      // Create access token.
       const accessToken = jwt.sign(
         payload,
         process.env.ACCESS_TOKEN_SECRET,
@@ -87,6 +86,7 @@ export class AccountController {
         access_token: accessToken
       })
     } catch (err) {
+      console.log(err)
       const error = createError(401)
       error.cause = err
       next(error)
