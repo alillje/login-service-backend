@@ -171,11 +171,11 @@ export class AccountController {
       )
 
       await transporter.sendMail({
-        from: `"Login Service" <${process.env.EMAIL_USER}>`, // sender address
-        to: req.body.email, // list of receivers
-        subject: 'Restore Password', // Subject line
-        text: `This is your reset token: ${restorePasswordToken}`, // plain text body
-        html: `This is your reset token: ${restorePasswordToken}` // html body
+        from: `"Login Service" <${process.env.EMAIL_USER}>`,
+        to: req.body.email,
+        subject: 'Reset Your Login Service Password',
+        text: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis/alillje/Login-Service/1.0.0`,
+        html: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis/alillje/Login-Service/1.0.0`
       })
 
       res.status(204).end()

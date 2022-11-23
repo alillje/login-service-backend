@@ -21,7 +21,7 @@ import { UsersController } from '../../../controllers/api/users-controller.js'
  * @param {object} res - Express response object.
  * @param {Function} next - Express next middleware function.
  */
-const authenticateJWT = (req, res, next) => {
+const authorizeJWT = (req, res, next) => {
   try {
     const [authenticationScheme, token] = req.headers.authorization?.split(' ')
 
@@ -39,7 +39,7 @@ const authenticateJWT = (req, res, next) => {
 
     next()
   } catch (err) {
-    const error = createError(401)
+    const error = createError(403)
     error.cause = err
     next(error)
   }
@@ -52,16 +52,10 @@ const controller = new UsersController()
 // Provide req.user to the route if :id is present in the route path.
 router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, id))
 
-router.get('/', authenticateJWT, (req, res, next) => controller.getAll(req, res, next))
-
-// router.patch('/password/reset', authenticateJWT, (req, res, next) => controller.updatePassword(req, res, next))
-// GET users/:id
-router.get('/search',
-  authenticateJWT,
-  (req, res, next) => controller.search(req, res, next))
+router.get('/', authorizeJWT, (req, res, next) => controller.getAll(req, res, next))
 
 // GET users/:id
 router.get('/:id',
-  authenticateJWT,
+  authorizeJWT,
   (req, res, next) => controller.find(req, res, next)
 )

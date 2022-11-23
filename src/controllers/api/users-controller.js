@@ -62,7 +62,7 @@ export class UsersController {
    * @param {object} res - Express response object.
    * @param {Function} next - Express next middleware function.
    */
-  async getAll (req, res, next) {
+  async getUsers (req, res, next) {
     const query = {}
     // Pagination
     const page = parseInt(req.query.page)
@@ -73,9 +73,9 @@ export class UsersController {
 
     try {
       // Check length of all users
-      if (req.query.search) {
+      if (req.query.username) {
         query.username = {
-          $regex: new RegExp(req.query.search, 'i')
+          $regex: new RegExp(req.query.username, 'i')
         }
       }
       const allUsers = await User.find(query)
@@ -98,28 +98,6 @@ export class UsersController {
         results.pages = Math.ceil(allUsers.length / limit) || 1
       }
       res.json(results)
-    } catch (error) {
-      console.error(error)
-      next(error)
-    }
-  }
-
-  /**
-   * Search for users.
-   *
-   * @param {object} req - Express request object.
-   * @param {object} res - Express response object.
-   * @param {Function} next - Express next middleware function.
-   */
-  async search (req, res, next) {
-    try {
-      const results = {}
-      if (req.query.search) {
-        results.users = await User.find({ username: req.query.search.username })
-      }
-      res.json(results)
-
-    // Pagination
     } catch (error) {
       console.error(error)
       next(error)
