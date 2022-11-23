@@ -99,8 +99,31 @@ export class UsersController {
       }
       res.json(results)
     } catch (error) {
-      console.error(error)
       next(error)
+    }
+  }
+
+  /**
+   * Deletes a user.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async deleteUser (req, res, next) {
+    try {
+      if (req.user.sub !== req.params.id) {
+        const error = createError(403)
+        next(error)
+        return
+      }
+
+      const user = User.findById(req.user.sub)
+      user.remove().exec()
+
+      res.status(204).end()
+    } catch (err) {
+      next(err)
     }
   }
 }

@@ -59,3 +59,8 @@ router.get('/:id',
   authorizeJWT,
   (req, res, next) => controller.find(req, res, next)
 )
+
+router.delete('/:id',
+  authorizeJWT,
+  (req, res, next) => controller.deleteUser(req, res, next)
+)
