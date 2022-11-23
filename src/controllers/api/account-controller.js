@@ -174,8 +174,8 @@ export class AccountController {
         from: `"Login Service" <${process.env.EMAIL_USER}>`,
         to: req.body.email,
         subject: 'Reset Your Login Service Password',
-        text: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis/alillje/Login-Service/1.0.0`,
-        html: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis/alillje/Login-Service/1.0.0`
+        text: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0`,
+        html: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0`
       })
 
       res.status(204).end()
