@@ -33,8 +33,7 @@ const authorizeJWT = (req, res, next) => {
     const payload = jwt.verify(token, Buffer.from(process.env.ACCESS_TOKEN_PUBLIC_KEY, 'base64').toString('ascii'))
 
     req.user = {
-      sub: payload.sub,
-      username: payload.username
+      sub: payload.sub
     }
 
     next()
@@ -53,12 +52,6 @@ const controller = new UsersController()
 router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, id))
 
 router.get('/', authorizeJWT, (req, res, next) => controller.getUsers(req, res, next))
-
-// GET users/:id
-router.get('/:id',
-  authorizeJWT,
-  (req, res, next) => controller.find(req, res, next)
-)
 
 router.delete('/:id',
   authorizeJWT,

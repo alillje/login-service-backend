@@ -44,19 +44,8 @@ export class UsersController {
   }
 
   /**
-   * Sends a JSON response containing a user.
-   *
-   * @param {object} req - Express request object.
-   * @param {object} res - Express response object.
-   * @param {Function} next - Express next middleware function.
-   */
-  async find (req, res, next) {
-    res.json(req.user)
-  }
-
-  /**
-   * Gets all users.
-   * Find and paginate results based on query parameters.
+   * Gets users.
+   * Finds and paginate results based on query parameters.
    *
    * @param {object} req - Express request object.
    * @param {object} res - Express response object.
