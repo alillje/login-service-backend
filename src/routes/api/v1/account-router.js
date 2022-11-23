@@ -87,7 +87,7 @@ const authenticatePasswordResetJWT = (req, res, next) => {
     }
 
     // Set properties to req.user from JWT payload
-    const payload = jwt.verify(token, Buffer.from(process.env.process.env.PASSWORD_RESET_PUBLIC, 'base64').toString('ascii'))
+    const payload = jwt.verify(token, Buffer.from(process.env.PASSWORD_RESET_PUBLIC, 'base64').toString('ascii'))
     req.user = {
       sub: payload.sub
     }

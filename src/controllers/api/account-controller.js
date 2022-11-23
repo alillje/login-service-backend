@@ -170,6 +170,8 @@ export class AccountController {
         }
       )
 
+      console.log(restorePasswordToken)
+
       await transporter.sendMail({
         from: `"Login Service" <${process.env.EMAIL_USER}>`,
         to: req.body.email,
@@ -180,7 +182,6 @@ export class AccountController {
 
       res.status(204).end()
     } catch (err) {
-      console.log(err)
       const error = err
       next(error)
     }
