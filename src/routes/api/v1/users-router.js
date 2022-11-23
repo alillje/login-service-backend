@@ -48,7 +48,6 @@ export const router = express.Router()
 
 const controller = new UsersController()
 
-// Provide req.user to the route if :id is present in the route path.
 router.param('id', (req, res, next, id) => controller.loadUser(req, res, next, id))
 
 router.get('/', authorizeJWT, (req, res, next) => controller.getUsers(req, res, next))

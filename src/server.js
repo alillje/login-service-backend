@@ -34,8 +34,6 @@ try {
     // Set error messages depending on status code
     if (err.status === 500) {
       err.message = 'An unexpected condition was encountered.'
-    } else if (err.status === 400) {
-      err.message = 'One or more required fields are missing.'
     } else if (err.status === 409) {
       err.message = 'The username and/or email address is already registered.'
     }

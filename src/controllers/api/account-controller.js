@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import { User } from '../../models/user.js'
 import { transporter } from '../../utils/mail-service.js'
+import { isValidInput } from '../../utils/validation-service.js'
 
 /**
  * Encapsulates a controller.
@@ -25,6 +26,11 @@ export class AccountController {
     try {
       if (!req.body.username || !req.body.email || !req.body.password) {
         const error = createError(400)
+        error.message = 'One or more required fields are missing.'
+        next(error)
+      } else if (!isValidInput(req.body.username)) {
+        const error = createError(400)
+        error.message = 'The username contains chracters that are not allowed'
         next(error)
       }
       const user = new User({
@@ -101,6 +107,7 @@ export class AccountController {
     try {
       if (!req.body.email) {
         const error = createError(400)
+        error.message = 'One or more required fields are missing'
         next(error)
       }
 
@@ -151,6 +158,7 @@ export class AccountController {
     try {
       if (!req.body.newPassword) {
         const error = createError(400)
+        error.message = 'One or more required fields are missing.'
         next(error)
       }
       const user = await User.findById(req.user.sub)

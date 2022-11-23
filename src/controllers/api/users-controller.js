@@ -23,13 +23,11 @@ export class UsersController {
   async loadUser (req, res, next, id) {
     try {
       const user = await User.findById(id)
-
       if (!user) {
         const error = createError(404)
         next(error)
         return
       }
-      // Provide the user to the request object.
       req.user = user
       next()
     } catch (err) {
