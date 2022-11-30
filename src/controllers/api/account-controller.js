@@ -29,18 +29,22 @@ export class AccountController {
         const error = createError(400)
         error.message = 'One or more required fields are missing.'
         next(error)
+        return
       } else if (!isValidUsername(req.body.username)) {
         const error = createError(400)
         error.message = 'The username contains chracters that are not allowed'
         next(error)
+        return
       } else if (!validator.isEmail(req.body.email)) {
         const error = createError(400)
         error.message = 'Invalid email address provided'
         next(error)
+        return
       } else if (!isValidPassword(req.body.password)) {
         const error = createError(400)
         error.message = 'The password must have a length between 10 - 256 characters'
         next(error)
+        return
       }
       const user = new User({
         username: req.body.username,
@@ -146,8 +150,8 @@ export class AccountController {
         from: `"Login Service" <${process.env.EMAIL_USER}>`,
         to: req.body.email,
         subject: 'Reset Your Login Service Password',
-        text: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0`,
-        html: `This is your reset token: ${restorePasswordToken} <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0`
+        text: `This is your reset token: <b>${restorePasswordToken}</b> <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0`,
+        html: `This is your reset token: <b>${restorePasswordToken}</b> <br> Use it as Bearer Authorization to reset your password by making a request to the endpoint /password/reset. <br> For more information, read the documentation: https://app.swaggerhub.com/apis-docs/alillje/Login-Service/1.0.0`
       })
       res.status(204).end()
     } catch (err) {

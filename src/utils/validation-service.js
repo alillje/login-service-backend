@@ -1,4 +1,4 @@
-
+import { ForbiddenCharacters } from './enum/forbidden-chars.js'
 /**
  * Module for Validating input.
  *
@@ -13,8 +13,7 @@
  * @returns {boolean} - True if input is valid, false otherwise.
  */
 export const isValidUsername = (input) => {
-  const forbiddenChars = ['<', '>', '/']
-  for (const char of forbiddenChars) {
+  for (const char of Object.values(ForbiddenCharacters)) {
     if (input.includes(char)) {
       return false
     }
