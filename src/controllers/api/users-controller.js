@@ -55,7 +55,6 @@ export class UsersController {
     const page = parseInt(req.query.page)
     const limit = parseInt(req.query.limit)
     const startIndex = (page - 1) * limit
-    const endIndex = page * limit
     const results = {}
 
     try {
@@ -68,16 +67,14 @@ export class UsersController {
       const allUsers = await User.find(query)
       results.users = await User.find(query).limit(limit).skip(startIndex).sort({ username: 1 })
       // Pagination
-      if (endIndex < page) {
+      if (allUsers.length / limit > page) {
         results.next = {
-          page,
-          limit
+          page: page + 1
         }
       }
-      if (page > 1) {
+      if (page > 1 && page <= allUsers.length / limit) {
         results.previous = {
-          page,
-          limit
+          page: page - 1
         }
       }
 
