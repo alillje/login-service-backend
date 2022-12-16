@@ -1,4 +1,4 @@
-<i>This application has been written in TypeScript here: https://github.com/alillje/login-service-backend-ts</i>
+<i>This application has also been written in TypeScript here: https://github.com/alillje/login-service-backend-ts</i>
 
 # Login Service API
 
